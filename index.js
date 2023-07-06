@@ -1,5 +1,6 @@
 const Dymo = require('dymo-connect');
 var QRCode = require('qrcode');
+require('dotenv').config()
 // export NODE_TLS_REJECT_UNAUTHORIZED=1
 const {orderLabel} = require('./xml/order');
 
@@ -13,11 +14,12 @@ function delay(millisec) {
    })
 }
 
-app.get('/status', async (req, res) => {
+console.log(`${process.env.TUNNEL_PATH}/status`);
+app.get(`${process.env.TUNNEL_PATH}/status`, async (req, res) => {
    res.status(200).send('Success');
 })
 
-app.get('/print/', async (req, res) => {
+app.get(`${process.env.TUNNEL_PATH}/print/`, async (req, res) => {
    const labels = req.query;
    for (const key in labels) {
       printIt(labels[key].id, labels[key].type);
@@ -26,7 +28,7 @@ app.get('/print/', async (req, res) => {
    res.send('label printed');
 })
 
-app.get('/printers/', async (req, res) => {
+app.get(`${process.env.TUNNEL_PATH}/printers/`, async (req, res) => {
    const printers = await Dymo.getPrinters();
    res.send(printers);
 })
